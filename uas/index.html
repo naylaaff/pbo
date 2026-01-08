@@ -23,7 +23,6 @@ body {
         linear-gradient(135deg, #0f0f14, #1a1a24);
 }
 
-/* CARD */
 .box {
     background: white;
     width: 360px;
@@ -81,41 +80,59 @@ button {
 <div class="box" id="app"></div>
 
 <script>
-function showLogin() {
-    document.getElementById("app").innerHTML = `
-        <h2>Login</h2>
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
-        <button class="login-btn" onclick="login()">Login</button>
-        <button class="cancel-btn" onclick="resetForm()">Cancel</button>
-    `;
-}
+class LoginApp {
+    constructor(containerId) {
+        this.container = document.getElementById(containerId);
+        this.username = "user";
+        this.password = "nayla12345!!";
+        this.renderLogin();
+    }
 
-function login() {
-    const user = document.getElementById("username").value;
-    const pass = document.getElementById("password").value;
+    renderLogin() {
+        this.container.innerHTML = `
+            <h2>Login</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button class="login-btn" id="loginBtn">Login</button>
+            <button class="cancel-btn" id="cancelBtn">Cancel</button>
+        `;
 
-    if (user === "user" && pass === "nayla12345!!") {
-        showSuccess();
-    } else {
-        alert("Username atau password salah");
+        document.getElementById("loginBtn")
+            .addEventListener("click", () => this.login());
+
+        document.getElementById("cancelBtn")
+            .addEventListener("click", () => this.resetForm());
+    }
+
+    login() {
+        const user = document.getElementById("username").value;
+        const pass = document.getElementById("password").value;
+
+        if (user === this.username && pass === this.password) {
+            this.renderSuccess();
+        } else {
+            alert("Username atau password salah");
+        }
+    }
+
+    renderSuccess() {
+        this.container.innerHTML = `
+            <h2>Berhasil login</h2>
+            <p>Hallo <b>${this.username}</b>, selamat datang di sistem</p>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
+        `;
+
+        document.getElementById("logoutBtn")
+            .addEventListener("click", () => this.renderLogin());
+    }
+
+    resetForm() {
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
     }
 }
 
-function showSuccess() {
-    document.getElementById("app").innerHTML = `
-        <h2>Berhasil login</h2>
-        <p>Hallo <b>user</b>, selamat datang di sistem</p>
-        <button class="logout-btn" onclick="showLogin()">Logout</button>
-    `;
-}
-
-function resetForm() {
-    document.getElementById("username").value = "";
-    document.getElementById("password").value = "";
-}
-
-showLogin();
+new LoginApp("app");
 </script>
 
 </body>
