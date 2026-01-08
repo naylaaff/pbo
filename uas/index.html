@@ -6,7 +6,7 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #ff5fa2, #4facfe);
+      background: linear-gradient(135deg, #ff5fa2, #ff9ad5);
       margin: 0;
       min-height: 100vh;
       display: flex;
@@ -18,21 +18,20 @@
       background: #ffffff;
       padding: 30px 25px;
       width: 320px;
-      border-radius: 18px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
       text-align: center;
     }
 
     h2 {
       margin-bottom: 15px;
-      color: #ff4f9a;
     }
 
     input {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
-      border-radius: 10px;
+      border-radius: 8px;
       border: 1px solid #ccc;
       font-size: 14px;
     }
@@ -41,27 +40,26 @@
       width: 100%;
       padding: 10px;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: bold;
-      font-size: 14px;
     }
 
     #loginBtn {
-      background: linear-gradient(90deg, #ff5fa2, #4facfe);
+      background: linear-gradient(90deg, #ff4f9a, #ff85c2);
       color: white;
       margin-top: 12px;
     }
 
     #cancelBtn {
       margin-top: 8px;
-      background: #f2f2f2;
+      background: #f0f0f0;
       color: #444;
     }
 
     #logoutBtn {
       margin-top: 15px;
-      background: #ff4f4f;
+      background: #e53935;
       color: white;
     }
 
@@ -83,12 +81,10 @@
       }
 
       initData() {
-        if (!localStorage.getItem('users')) {
-          const users = [
-            { username: 'nayla', password: 'nayla241' }
-          ];
-          localStorage.setItem('users', JSON.stringify(users));
-        }
+        const users = [
+          { username: 'nayla', password: 'nayla216' }
+        ];
+        localStorage.setItem('users', JSON.stringify(users));
       }
 
       renderLogin() {
@@ -112,12 +108,13 @@
         const password = document.getElementById('password').value;
 
         const users = JSON.parse(localStorage.getItem('users'));
+
         const found = users.find(
           user => user.username === username && user.password === password
         );
 
         if (!found) {
-          alert('Username atau password salah ❌');
+          alert('Username atau password salah!');
         } else {
           this.renderUserPage(found.username);
         }
@@ -126,8 +123,8 @@
       renderUserPage(username) {
         this.container.innerHTML = `
           <div class="user-info">
-            <h2>Login Berhasil 💖</h2>
-            <p>Halo <b>${username}</b>, selamat datang</p>
+            <h2>Berhasil Login 💖</h2>
+            <p>Hallo <b>${username}</b>, selamat datang!</p>
             <button id="logoutBtn">Logout</button>
           </div>
         `;
