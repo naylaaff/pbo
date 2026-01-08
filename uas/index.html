@@ -1,122 +1,152 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Login</title>
+  <meta charset="UTF-8">
+  <title>Aplikasi Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #ff5fa2, #4facfe);
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-<style>
-  body {
-    margin: 0;
-    min-height: 100vh;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #ff4fa3, #0b0b0f, #ff2d88);
-  }
+    .box {
+      background: #ffffff;
+      padding: 30px 25px;
+      width: 320px;
+      border-radius: 18px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+      text-align: center;
+    }
 
-  .card {
-    width: 360px;
-    background: #fff;
-    padding: 35px 30px;
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
-    text-align: center;
-  }
+    h2 {
+      margin-bottom: 15px;
+      color: #ff4f9a;
+    }
 
-  h2 {
-    margin-bottom: 25px;
-  }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
 
-  input {
-    width: 100%;
-    padding: 13px;
-    margin-bottom: 15px;
-    border-radius: 12px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-  }
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+    }
 
-  button {
-    width: 100%;
-    padding: 13px;
-    border-radius: 14px;
-    border: none;
-    font-weight: bold;
-    font-size: 14px;
-    cursor: pointer;
-  }
+    #loginBtn {
+      background: linear-gradient(90deg, #ff5fa2, #4facfe);
+      color: white;
+      margin-top: 12px;
+    }
 
-  #loginBtn {
-    background: linear-gradient(90deg, #ff6aa9, #9b9cff);
-    color: white;
-    margin-bottom: 12px;
-  }
+    #cancelBtn {
+      margin-top: 8px;
+      background: #f2f2f2;
+      color: #444;
+    }
 
-  #cancelBtn {
-    background: #f2f2f2;
-  }
-</style>
+    #logoutBtn {
+      margin-top: 15px;
+      background: #ff4f4f;
+      color: white;
+    }
+
+    .user-info {
+      text-align: center;
+    }
+  </style>
 </head>
 
 <body>
+  <div class="box" id="app"></div>
 
-<div class="card" id="app"></div>
+  <script>
+    class LoginApp {
+      constructor(containerId) {
+        this.container = document.getElementById(containerId);
+        this.initData();
+        this.renderLogin();
+      }
 
-<script>
-  class LoginApp {
-    constructor(id) {
-      this.container = document.getElementById(id);
-      this.setUser();
-      this.renderLogin();
-    }
+      initData() {
+        if (!localStorage.getItem('users')) {
+          const users = [
+            { username: 'nayla', password: 'nayla241' }
+          ];
+          localStorage.setItem('users', JSON.stringify(users));
+        }
+      }
 
-    setUser() {
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          username: "nayla",
-          password: "nayla12345!!"
-        })
-      );
-    }
+      renderLogin() {
+        this.container.innerHTML = `
+          <h2>Login</h2>
+          <input type="text" id="username" placeholder="Username">
+          <input type="password" id="password" placeholder="Password">
+          <button id="loginBtn">Login</button>
+          <button id="cancelBtn">Cancel</button>
+        `;
 
-    renderLogin() {
-      this.container.innerHTML = `
-        <h2>Login</h2>
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
-        <button id="loginBtn">Login</button>
-        <button id="cancelBtn">Cancel</button>
-      `;
+        document.getElementById('loginBtn')
+          .addEventListener('click', () => this.login());
 
-      document.getElementById("loginBtn")
-        .onclick = () => this.login();
+        document.getElementById('cancelBtn')
+          .addEventListener('click', () => this.cancel());
+      }
 
-      document.getElementById("cancelBtn")
-        .onclick = () => this.clear();
-    }
+      login() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
 
-    login() {
-      const u = document.getElementById("username").value;
-      const p = document.getElementById("password").value;
-      const user = JSON.parse(localStorage.getItem("user"));
+        const users = JSON.parse(localStorage.getItem('users'));
+        const found = users.find(
+          user => user.username === username && user.password === password
+        );
 
-      if (u === user.username && p === user.password) {
-        alert("Login berhasil 🎉");
-      } else {
-        alert("Username atau password salah!");
+        if (!found) {
+          alert('Username atau password salah ❌');
+        } else {
+          this.renderUserPage(found.username);
+        }
+      }
+
+      renderUserPage(username) {
+        this.container.innerHTML = `
+          <div class="user-info">
+            <h2>Login Berhasil 💖</h2>
+            <p>Halo <b>${username}</b>, selamat datang</p>
+            <button id="logoutBtn">Logout</button>
+          </div>
+        `;
+
+        document.getElementById('logoutBtn')
+          .addEventListener('click', () => this.logout());
+      }
+
+      logout() {
+        this.renderLogin();
+      }
+
+      cancel() {
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
       }
     }
 
-    clear() {
-      document.getElementById("username").value = "";
-      document.getElementById("password").value = "";
-    }
-  }
-
-  new LoginApp("app");
-</script>
-
+    new LoginApp('app');
+  </script>
 </body>
 </html>
