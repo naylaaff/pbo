@@ -5,134 +5,117 @@
 <title>Login</title>
 
 <style>
-* {
+  body {
     margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
-body {
     min-height: 100vh;
+    font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    background:
-        radial-gradient(circle at top left, #ff5fa2, transparent 40%),
-        radial-gradient(circle at bottom right, #ff2d8f, transparent 40%),
-        linear-gradient(135deg, #0f0f14, #1a1a24);
-}
+    background: linear-gradient(135deg, #ff4fa3, #0b0b0f, #ff2d88);
+  }
 
-.box {
-    background: white;
+  .card {
     width: 360px;
-    padding: 35px;
+    background: #fff;
+    padding: 35px 30px;
     border-radius: 20px;
     box-shadow: 0 20px 40px rgba(0,0,0,0.35);
     text-align: center;
-}
+  }
 
-h2 {
-    margin-bottom: 12px;
-}
-
-p {
+  h2 {
     margin-bottom: 25px;
-    color: #333;
-}
+  }
 
-input {
+  input {
     width: 100%;
-    padding: 12px;
+    padding: 13px;
     margin-bottom: 15px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-}
-
-button {
-    width: 100%;
-    padding: 12px;
     border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+
+  button {
+    width: 100%;
+    padding: 13px;
+    border-radius: 14px;
     border: none;
-    cursor: pointer;
     font-weight: bold;
-}
+    font-size: 14px;
+    cursor: pointer;
+  }
 
-.login-btn {
-    background: linear-gradient(90deg, #ff5fa2, #8aa6ff);
+  #loginBtn {
+    background: linear-gradient(90deg, #ff6aa9, #9b9cff);
     color: white;
-}
+    margin-bottom: 12px;
+  }
 
-.cancel-btn {
-    margin-top: 10px;
-    background: #f1f1f1;
-}
-
-.logout-btn {
-    background: #e53935;
-    color: white;
-}
+  #cancelBtn {
+    background: #f2f2f2;
+  }
 </style>
 </head>
 
 <body>
 
-<div class="box" id="app"></div>
+<div class="card" id="app"></div>
 
 <script>
-class LoginApp {
-    constructor(containerId) {
-        this.container = document.getElementById(containerId);
-        this.username = "user";
-        this.password = "nayla12345!!";
-        this.renderLogin();
+  class LoginApp {
+    constructor(id) {
+      this.container = document.getElementById(id);
+      this.setUser();
+      this.renderLogin();
+    }
+
+    setUser() {
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          username: "nayla",
+          password: "nayla12345!!"
+        })
+      );
     }
 
     renderLogin() {
-        this.container.innerHTML = `
-            <h2>Login</h2>
-            <input type="text" id="username" placeholder="Username">
-            <input type="password" id="password" placeholder="Password">
-            <button class="login-btn" id="loginBtn">Login</button>
-            <button class="cancel-btn" id="cancelBtn">Cancel</button>
-        `;
+      this.container.innerHTML = `
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button id="loginBtn">Login</button>
+        <button id="cancelBtn">Cancel</button>
+      `;
 
-        document.getElementById("loginBtn")
-            .addEventListener("click", () => this.login());
+      document.getElementById("loginBtn")
+        .onclick = () => this.login();
 
-        document.getElementById("cancelBtn")
-            .addEventListener("click", () => this.resetForm());
+      document.getElementById("cancelBtn")
+        .onclick = () => this.clear();
     }
 
     login() {
-        const user = document.getElementById("username").value;
-        const pass = document.getElementById("password").value;
+      const u = document.getElementById("username").value;
+      const p = document.getElementById("password").value;
+      const user = JSON.parse(localStorage.getItem("user"));
 
-        if (user === this.username && pass === this.password) {
-            this.renderSuccess();
-        } else {
-            alert("Username atau password salah");
-        }
+      if (u === user.username && p === user.password) {
+        alert("Login berhasil 🎉");
+      } else {
+        alert("Username atau password salah!");
+      }
     }
 
-    renderSuccess() {
-        this.container.innerHTML = `
-            <h2>Berhasil login</h2>
-            <p>Hallo <b>${this.username}</b>, selamat datang di sistem</p>
-            <button class="logout-btn" id="logoutBtn">Logout</button>
-        `;
-
-        document.getElementById("logoutBtn")
-            .addEventListener("click", () => this.renderLogin());
+    clear() {
+      document.getElementById("username").value = "";
+      document.getElementById("password").value = "";
     }
+  }
 
-    resetForm() {
-        document.getElementById("username").value = "";
-        document.getElementById("password").value = "";
-    }
-}
-
-new LoginApp("app");
+  new LoginApp("app");
 </script>
 
 </body>
